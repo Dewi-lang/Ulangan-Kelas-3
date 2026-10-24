@@ -1,0 +1,750 @@
+```html
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Asesmen Siswa Standar Kota Semarang - SDN GENUKSARI 01</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Font Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f1f5f9;
+        }
+        /* Custom scrollbar for matrix table */
+        .table-responsive::-webkit-scrollbar {
+            height: 8px;
+        }
+        .table-responsive::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 4px;
+        }
+        .table-responsive::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+        .table-responsive::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+    </style>
+</head>
+<body class="text-slate-800 min-h-screen flex flex-col">
+
+    <!-- Header / Navbar -->
+    <header class="bg-blue-800 text-white shadow-md py-4 px-6 border-b-4 border-yellow-400 sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-2">
+            <div class="flex items-center space-x-3">
+                <div class="bg-white p-2 rounded-full text-blue-800 font-bold w-10 h-10 flex items-center justify-center shadow">
+                    <i class="fas fa-graduation-cap text-xl"></i>
+                </div>
+                <div>
+                    <h1 class="text-lg md:text-xl font-extrabold tracking-wide">SDN GENUKSARI 01 SEMARANG</h1>
+                    <p class="text-xs text-blue-200">Latihan Soal Asesmen Siswa Standar Kota Semarang - Matematika (Penjumlahan & Pengurangan)</p>
+                </div>
+            </div>
+            
+            <!-- Student Mini Info (When Logged In) -->
+            <div id="userHeaderInfo" class="hidden flex items-center gap-4 bg-blue-900/60 px-4 py-1.5 rounded-lg border border-blue-700">
+                <div class="text-right text-xs">
+                    <div id="hdrStudentName" class="font-bold text-white text-sm">Nama Siswa</div>
+                    <div class="text-blue-200"><span id="hdrStudentClass">Kelas 1</span> | Absen: <span id="hdrStudentAbsen">01</span></div>
+                </div>
+                <div class="bg-yellow-400 text-blue-900 font-bold px-3 py-1 rounded-md text-sm flex items-center gap-1">
+                    <i class="far fa-clock"></i>
+                    <span id="timerDisplay">30:00</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <main class="flex-grow max-w-7xl w-full mx-auto p-4 md:p-6">
+
+        <!-- 1. HALAMAN LOGIN -->
+        <section id="loginSection" class="max-w-md mx-auto my-8 bg-white rounded-2xl shadow-xl overflow-hidden border border-slate-200">
+            <div class="bg-gradient-to-r from-blue-700 to-indigo-800 p-6 text-white text-center">
+                <div class="w-20 h-20 bg-white/10 rounded-full flex items-center justify-center mx-auto mb-3 border border-white/20">
+                    <i class="fas fa-user-graduate text-4xl text-yellow-300"></i>
+                </div>
+                <h2 class="text-2xl font-bold">Portal Ujian Siswa</h2>
+                <p class="text-blue-100 text-sm mt-1">Silakan isi data diri sebelum memulainya</p>
+            </div>
+            
+            <form id="loginForm" onsubmit="handleLogin(event)" class="p-6 space-y-4">
+                <div>
+                    <label class="block text-sm font-semibold text-slate-700 mb-1">Nama Lengkap Siswa</label>
+                    <div class="relative">
+                        <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-slate-400">
+                            <i class="fas fa-user"></i>
+                        </span>
+                        <input type="text" id="inputName" required placeholder="Contoh: Ahmad Rizky" 
+                            class="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition">
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-semibold text-slate-700 mb-1">Nomor Absen</label>
+                        <div class="relative">
+                            <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-slate-400">
+                                <i class="fas fa-list-ol"></i>
+                            </span>
+                            <input type="number" id="inputAbsen" required min="1" max="50" placeholder="15" 
+                                class="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition">
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-semibold text-slate-700 mb-1">Kelas</label>
+                        <select id="inputKelas" required class="w-full py-2.5 px-3 rounded-xl border border-slate-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition">
+                            <option value="Kelas 1A">Kelas 1A</option>
+                            <option value="Kelas 1B">Kelas 1B</option>
+                            <option value="Kelas 2A">Kelas 2A</option>
+                            <option value="Kelas 2B">Kelas 2B</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="bg-blue-50 p-3 rounded-xl text-xs text-blue-800 border border-blue-200">
+                    <i class="fas fa-info-circle mr-1 text-blue-600"></i>
+                    <strong>Ketentuan Ujian:</strong> Waktu pengerjaan adalah <strong>30 Menit</strong> untuk <strong>30 Soal</strong> Matematika.
+                </div>
+
+                <button type="submit" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 px-6 rounded-xl shadow-lg shadow-emerald-600/30 transition transform active:scale-95 flex items-center justify-center gap-2">
+                    <i class="fas fa-play"></i> Mulai Ujian
+                </button>
+            </form>
+        </section>
+
+        <!-- 2. HALAMAN SOAL (EXAM SECTION) -->
+        <section id="examSection" class="hidden">
+            <div class="grid grid-cols-1 lg:grid-cols-4 gap-6">
+                
+                <!-- Main Question Area (Left/Center) -->
+                <div class="lg:col-span-3 flex flex-col justify-between bg-white rounded-2xl shadow-lg border border-slate-200 p-6 min-h-[500px]">
+                    <div>
+                        <!-- Header Soal -->
+                        <div class="flex justify-between items-center border-b pb-4 mb-6">
+                            <span id="questionBadge" class="bg-blue-100 text-blue-800 font-bold px-3 py-1 rounded-full text-sm">
+                                Soal Nomor <span id="currentQuestionNum">1</span> dari 30
+                            </span>
+                            <span class="text-xs text-slate-500 italic">Pilihlah salah satu jawaban yang benar</span>
+                        </div>
+
+                        <!-- Teks Soal -->
+                        <div class="mb-6">
+                            <p id="questionText" class="text-lg md:text-xl text-slate-800 font-medium leading-relaxed">
+                                Loading soal...
+                            </p>
+                        </div>
+
+                        <!-- Pilihan Jawaban -->
+                        <div id="optionsContainer" class="space-y-3 mb-6">
+                            <!-- Populated dynamically -->
+                        </div>
+
+                        <!-- Kunci & Cara Kerja (Khusus Pasca Ujian) -->
+                        <div id="solutionBox" class="hidden mt-6 p-4 bg-amber-50 border border-amber-200 rounded-xl">
+                            <h4 class="font-bold text-amber-900 flex items-center gap-2 mb-1">
+                                <i class="fas fa-lightbulb text-amber-600"></i> Kunci Jawaban & Pembahasan:
+                            </h4>
+                            <p id="solutionText" class="text-sm text-amber-800 font-medium"></p>
+                        </div>
+                    </div>
+
+                    <!-- Tombol Navigasi Bawah -->
+                    <div class="pt-6 border-t flex justify-between items-center gap-3">
+                        <button id="btnPrev" onclick="navigateQuestion(-1)" class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2.5 px-5 rounded-xl shadow transition flex items-center gap-2">
+                            <i class="fas fa-arrow-left"></i> Soal Sebelumnya
+                        </button>
+
+                        <button id="btnNext" onclick="navigateQuestion(1)" class="bg-emerald-600 hover:bg-emerald-700 text-white font-semibold py-2.5 px-5 rounded-xl shadow transition flex items-center gap-2">
+                            Soal Selanjutnya <i class="fas fa-arrow-right"></i>
+                        </button>
+
+                        <button id="btnFinish" onclick="confirmFinishExam()" class="bg-red-600 hover:bg-red-700 text-white font-semibold py-2.5 px-5 rounded-xl shadow transition flex items-center gap-2">
+                            <i class="fas fa-check-circle"></i> Selesaikan Ujian
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Right Sidebar Navigation (Grid 3 Baris Sejajar) -->
+                <div class="bg-white rounded-2xl shadow-lg border border-slate-200 p-5 flex flex-col justify-between">
+                    <div>
+                        <h3 class="font-bold text-slate-700 mb-3 text-center border-b pb-2 flex items-center justify-center gap-2">
+                            <i class="fas fa-th text-blue-600"></i> Navigasi Soal
+                        </h3>
+                        
+                        <p class="text-xs text-slate-500 mb-3 text-center">Klik nomor untuk melompat langsung</p>
+                        
+                        <!-- Grid 3 Kolom untuk Tampilan Kotak Sejajar 3 Baris -->
+                        <div id="navigationGrid" class="grid grid-cols-3 gap-2.5 max-h-[380px] overflow-y-auto p-1">
+                            <!-- Populated dynamically -->
+                        </div>
+                    </div>
+
+                    <!-- Legend Status -->
+                    <div class="mt-6 pt-4 border-t border-slate-100 space-y-2 text-xs">
+                        <div class="flex items-center gap-2">
+                            <div class="w-4 h-4 rounded bg-emerald-500"></div>
+                            <span class="text-slate-600">Sudah Dikerjakan</span>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <div class="w-4 h-4 rounded bg-slate-200 border border-slate-300"></div>
+                            <span class="text-slate-600">Belum Dikerjakan</span>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <div class="w-4 h-4 rounded ring-2 ring-blue-600 bg-blue-100"></div>
+                            <span class="text-slate-600">Sedang Dibuka</span>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- 3. REKAP NILAI & PERINGKAT SECTION (HASIL AKHIR) -->
+        <section id="resultSection" class="hidden space-y-8 max-w-5xl mx-auto">
+            
+            <!-- Banner Ucapan Selesai -->
+            <div class="bg-white rounded-2xl shadow-xl p-6 md:p-8 border border-slate-200 text-center relative overflow-hidden">
+                <div class="inline-block p-4 bg-green-100 text-green-600 rounded-full mb-3">
+                    <i class="fas fa-award text-5xl"></i>
+                </div>
+                <h2 class="text-2xl md:text-3xl font-extrabold text-slate-800 mb-2" id="finishGreeting">
+                    Selamat, Anda telah menyelesaikan tugas !
+                </h2>
+                <p id="timeOutWarning" class="hidden text-red-600 font-bold mb-2">
+                    Maaf waktu habis, terima kasih atas partisipasinya!
+                </p>
+                <p class="text-slate-600 text-sm">Berikut adalah ringkasan hasil latihan soal asesmen Anda</p>
+
+                <!-- Cards Nilai Utama -->
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-6">
+                    <div class="bg-blue-50 border border-blue-200 rounded-xl p-4">
+                        <span class="text-xs text-blue-600 font-bold uppercase">Skor Total</span>
+                        <div id="scoreDisplay" class="text-3xl md:text-4xl font-extrabold text-blue-800 mt-1">0</div>
+                    </div>
+                    <div class="bg-emerald-50 border border-emerald-200 rounded-xl p-4">
+                        <span class="text-xs text-emerald-600 font-bold uppercase">Jawaban Benar</span>
+                        <div id="correctCountDisplay" class="text-3xl md:text-4xl font-extrabold text-emerald-700 mt-1">0</div>
+                    </div>
+                    <div class="bg-rose-50 border border-rose-200 rounded-xl p-4">
+                        <span class="text-xs text-rose-600 font-bold uppercase">Jawaban Salah</span>
+                        <div id="wrongCountDisplay" class="text-3xl md:text-4xl font-extrabold text-rose-700 mt-1">0</div>
+                    </div>
+                    <div class="bg-amber-50 border border-amber-200 rounded-xl p-4">
+                        <span class="text-xs text-amber-600 font-bold uppercase">Peringkat Anda</span>
+                        <div id="rankDisplay" class="text-3xl md:text-4xl font-extrabold text-amber-700 mt-1">#1</div>
+                    </div>
+                </div>
+
+                <div class="mt-6 flex flex-wrap justify-center gap-4">
+                    <button onclick="reviewAnswers()" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2.5 px-6 rounded-xl shadow transition flex items-center gap-2">
+                        <i class="fas fa-eye"></i> Lihat Kunci Jawaban & Cara
+                    </button>
+                    <button onclick="logoutApp()" class="bg-slate-700 hover:bg-slate-800 text-white font-bold py-2.5 px-6 rounded-xl shadow transition flex items-center gap-2">
+                        <i class="fas fa-sign-out-alt"></i> Keluar
+                    </button>
+                </div>
+            </div>
+
+            <!-- ANALISIS PENILAIAN SISWA (CANVA / MATRIX STYLE PER SOAL) -->
+            <div class="bg-white rounded-2xl shadow-xl p-6 border border-slate-200">
+                <h3 class="text-xl font-bold text-slate-800 mb-2 flex items-center gap-2">
+                    <i class="fas fa-chart-bar text-indigo-600"></i> Analisis Penilaian Siswa (Detail Per Soal)
+                </h3>
+                <p class="text-xs text-slate-500 mb-4">
+                    Tabel matriks evaluasi: Setiap kolom mewakili 1 nomor soal. Warna <span class="text-emerald-600 font-bold">Hijau</span> = Benar, Warna <span class="text-red-600 font-bold">Merah</span> = Salah.
+                </p>
+
+                <div class="overflow-x-auto table-responsive pb-2">
+                    <table class="w-full text-center text-xs border-collapse">
+                        <thead>
+                            <tr class="bg-slate-800 text-white">
+                                <th class="p-2 border border-slate-700 min-w-[120px] sticky left-0 bg-slate-800 z-10">Nama Siswa</th>
+                                <th class="p-2 border border-slate-700 min-w-[60px]">Kelas</th>
+                                <!-- 30 Soal Column Headers -->
+                                <script>
+                                    for(let i=1; i<=30; i++) {
+                                        document.write(`<th class="p-2 border border-slate-700 min-w-[36px]">S${i}</th>`);
+                                    }
+                                </script>
+                                <th class="p-2 border border-slate-700 min-w-[60px]">Skor</th>
+                            </tr>
+                        </thead>
+                        <tbody id="matrixTableBody">
+                            <!-- Populated dynamically with current user and simulated classmate data -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- REKAP PERINGKAT SELURUH PESERTA -->
+            <div class="bg-white rounded-2xl shadow-xl p-6 border border-slate-200">
+                <h3 class="text-xl font-bold text-slate-800 mb-4 flex items-center gap-2">
+                    <i class="fas fa-trophy text-yellow-500"></i> Rekap Peringkat Peserta Asesmen
+                </h3>
+                
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse text-sm">
+                        <thead>
+                            <tr class="bg-slate-100 text-slate-700 border-b">
+                                <th class="p-3">Peringkat</th>
+                                <th class="p-3">Nama Siswa</th>
+                                <th class="p-3">Kelas</th>
+                                <th class="p-3">No. Absen</th>
+                                <th class="p-3 text-center">Benar</th>
+                                <th class="p-3 text-center">Salah</th>
+                                <th class="p-3 text-right">Skor Akhir</th>
+                            </tr>
+                        </thead>
+                        <tbody id="leaderboardTableBody" class="divide-y divide-slate-100">
+                            <!-- Populated dynamically -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </section>
+
+    </main>
+
+    <!-- Modal Konfirmasi / Message Custom -->
+    <div id="customModal" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm hidden items-center justify-center z-50 p-4">
+        <div class="bg-white rounded-2xl shadow-2xl max-w-sm w-full p-6 text-center animate-bounce-short">
+            <div id="modalIcon" class="w-12 h-12 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center mx-auto mb-3 text-2xl">
+                <i class="fas fa-question"></i>
+            </div>
+            <h3 id="modalTitle" class="text-lg font-bold text-slate-800 mb-2">Konfirmasi</h3>
+            <p id="modalMessage" class="text-sm text-slate-600 mb-6">Apakah Anda yakin?</p>
+            <div class="flex justify-center gap-3" id="modalActions">
+                <button onclick="closeModal()" class="px-4 py-2 bg-slate-200 hover:bg-slate-300 text-slate-700 rounded-xl text-sm font-semibold">Batal</button>
+                <button id="modalConfirmBtn" class="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-xl text-sm font-semibold">Ya, Selesaikan</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Application Script -->
+    <script>
+        // 1. DATA SOAL PERSIS DARI LAMPIRAN FILE (30 SOAL)
+        const questionsData = [
+            { id: 1, question: "Yono memiliki 15 buah duku dan Abi memiliki 10 buah duku, apabila digabungkan maka jumlah keseluruhan buah duku milik Yono dan Abi sekarang adalah….", options: ["20 buah", "25 buah", "30 buah", "35 buah"], answer: 1, explanation: "15 buah duku + 10 buah duku = 25 buah duku." },
+            { id: 2, question: "Ibu membeli roti sebanyak 7 buah lalu ayah membeli lagi roti sebanyak 4 buah, jadi jumlah rotinya adalah …..", options: ["10 buah", "11 buah", "12 buah", "13 buah"], answer: 1, explanation: "7 roti + 4 roti = 11 buah roti." },
+            { id: 3, question: "Pak Joni sudah menanam 12 buah pohon mangga lalu pak Dadang menanam 10 buah pohon mangga, maka apabila digabungkan jumlah pohon mangga ada….", options: ["22 buah", "20 buah", "24 buah", "18 buah"], answer: 0, explanation: "12 pohon + 10 pohon = 22 buah pohon mangga." },
+            { id: 4, question: "Uni membeli 12 Kg gula lalu ibu membeli lagi gula sebanyak 15 kg, jadi berapakah jumlah gula milik mereka bedua…..", options: ["25 Kg", "26 Kg", "27 Kg", "28 Kg"], answer: 2, explanation: "12 Kg + 15 Kg = 27 Kg gula." },
+            { id: 5, question: "Thegi memiliki berat badan 30 Kg dan Maliki memiliki berat badan 25 Kg, jadi apabila mereka berdua digabungkan jumlahnya beratnya adalah ….", options: ["50 Kg", "55 Kg", "60 Kg", "65 Kg"], answer: 1, explanation: "30 Kg + 25 Kg = 55 Kg." },
+            { id: 6, question: "Ibu membeli telur 14 butir lalu kakak membeli telur 10 butir dan di gunakan untuk membuat kue sebanyak 11 butir, maka berapakah sisa terlur tersebut ….", options: ["12 butir", "13 butir", "14 butir", "15 butir"], answer: 1, explanation: "14 + 10 = 24 butir. Kemudian dikurangi untuk kue: 24 - 11 = 13 butir telur." },
+            { id: 7, question: "Rini memiliki uang Rp 3.000,00 lalu Rana memiliki uang Rp 2.000,00 apabila uang mereka digabungkan jumlahnya ada….", options: ["Rp 4.000,00", "Rp 5.000,00", "Rp 6.000,00", "Rp 7.000,00"], answer: 1, explanation: "Rp 3.000,00 + Rp 2.000,00 = Rp 5.000,00." },
+            { id: 8, question: "Reno memiliki 3 pensil dan Reni memiliki 7 Pensil, apabila digabungkan jumlah pensil mereka berdua ada …..", options: ["9 pensil", "10 pensil", "11 pensil", "12 pensil"], answer: 1, explanation: "3 pensil + 7 pensil = 10 pensil." },
+            { id: 9, question: "Ane memiliki 25 buah manggis lalu ia berikan kepada ayahnya 5 buah lalu kepada ibunya 5 buah. Jadi buah mengis Ane sekrang ada berapa …..", options: ["10 buah", "15 buah", "20 buah", "25 buah"], answer: 1, explanation: "25 - 5 - 5 = 15 buah manggis." },
+            { id: 10, question: "Pak Johan memiliki 10 pohon apel lalu pak Toro memiliki 15 pohon apel apabila pohon milik pak Johan dan pak Toro itu di gabungkan jumlahnya ada ……", options: ["20 pohon", "25 pohon", "30 pohon", "35 pohon"], answer: 1, explanation: "10 pohon + 15 pohon = 25 pohon." },
+            { id: 11, question: "Kak Ani membeli tepung terigu sebanyak 6 Kg lalu ibu membeli lagi tepung terigu sebanyak 10 kg, lalu dipakai untuk membuat kue sebanyak 7 kg, maka sekarang jumlah terigunya ada…..", options: ["8 kg", "9 kg", "10 kg", "11 kg"], answer: 1, explanation: "6 kg + 10 kg = 16 kg. Digunakan 7 kg: 16 - 7 = 9 kg terigu." },
+            { id: 12, question: "Ani mempunyai 2 pensil lalu ibu membelikannya 2 pensil. Jadi berapakah pensil miliki Ani …..", options: ["3 pensil", "4 pensil", "5 pensil", "6 pensil"], answer: 1, explanation: "2 pensil + 2 pensil = 4 pensil." },
+            { id: 13, question: "Adi membeli 1 buah penghapus lalu ayah membelikan Adi 1 penghapus dan ibu juga membelikannay 1 buah penghapus. Maka penghapus Adi sekarang ada ……", options: ["2 buah", "3 buah", "4 buah", "5 buah"], answer: 1, explanation: "1 + 1 + 1 = 3 buah penghapus." },
+            { id: 14, question: "Ayah memberikan Iko 3 pena lalu ibu juga membelikan Iko 1 pena. Jadi berapakah jumlah pena Iko sekarang ……", options: ["3 pena", "4 pena", "5 pena", "6 pena"], answer: 1, explanation: "3 pena + 1 pena = 4 pena." },
+            { id: 15, question: "Ina dibelikan 2 penggaris oleh ayah dan ibu membelikan 3 penggaris, maka berapakah jumlah keseluruhan penggaris Ina sekarang ….", options: ["4 penggaris", "5 penggaris", "6 penggaris", "7 penggaris"], answer: 1, explanation: "2 penggaris + 3 penggaris = 5 penggaris." },
+            { id: 16, question: "Beta memiliki berat badan 24 kg lalu Andi memiliki berat badan 20 kg, apabila berat badan mereka digabungkan maka jumlah berat badan mereka adalah …..", options: ["40 kg", "42 kg", "44 kg", "46 kg"], answer: 2, explanation: "24 kg + 20 kg = 44 kg." },
+            { id: 17, question: "Rudi emiliki 5 buah penggaris lalu diberikan kepada Wira 2 buah, jadi sekarang jumlah penggaris milik Rudi adalah ….", options: ["2 buah", "3 buah", "4 buah", "5 buah"], answer: 1, explanation: "5 penggaris - 2 penggaris = 3 penggaris." },
+            { id: 18, question: "Harya memiliki 3 buah penghapus lalu dia membeli lagi 7 buah dan diberikan kepada Luna sebanyak 5 buah, jadi sekarang pengahapus milik Haya adalaha…..", options: ["4 buah", "5 buah", "6 buah", "7 buah"], answer: 1, explanation: "3 + 7 = 10. Diberikan ke Luna 5: 10 - 5 = 5 buah penghapus." },
+            { id: 19, question: "Farhan membeli 3 buah rambutan lalu ia membeli lagi 5 buah rambutan, apabila dijumlahkan keseluruhan rambutan milik Farhan adalah….", options: ["7 buah", "8 buah", "9 buah", "10 buah"], answer: 1, explanation: "3 rambutan + 5 rambutan = 8 buah rambutan." },
+            { id: 20, question: "Ido memiliki uang Rp 2.000,00 lalu ayah memberinya uang sebesar Rp 3.000,00. Jadi berapakah jumlah keseluruhan uang milik Ido sekarang …..", options: ["Rp 4.000,00", "Rp 5.000,00", "Rp 6.000,00", "Rp 7.000,00"], answer: 1, explanation: "Rp 2.000,00 + Rp 3.000,00 = Rp 5.000,00." },
+            { id: 21, question: "Ati mempunyai 6 buah pensil lalu ia berikan kepada Ani 2 buah pensil. Jadi jumlah pensil Ati sekarang adalah……", options: ["3 buah", "4 buah", "5 buah", "6 buah"], answer: 1, explanation: "6 pensil - 2 pensil = 4 pensil." },
+            { id: 22, question: "Ade memiliki uang Rp 2.000,00 lalu ia berikan kepada adiknya Rp 1.000,00, jadi jumlah uang Ade sekarang adalah…..", options: ["Rp 500,00", "Rp 1.000,00", "Rp 1.500,00", "Rp 2.000,00"], answer: 1, explanation: "Rp 2.000,00 - Rp 1.000,00 = Rp 1.000,00." },
+            { id: 23, question: "Lia memiliki 2 buah penghapus lalu ia berikan kepada Ita 1 buah penghapus setelah itu dia diberikan oleh gurunya 1 buah penghapus lagi. Maka berapakah jumlah keseluruhan penghapus Lia sekarang ……", options: ["1 buah", "2 buah", "3 buah", "4 buah"], answer: 1, explanation: "2 - 1 = 1. Kemudian ditambah dari guru: 1 + 1 = 2 buah penghapus." },
+            { id: 24, question: "Tia memiliki uang yang berjumlah Rp 10.000,00 lalu ia belikan satu buah es krim dengan harga Rp 5.000,00. Jadi berapakah jumlah uang Tia sekarang ….", options: ["Rp 3.000,00", "Rp 4.000,00", "Rp 5.000,00", "Rp 6.000,00"], answer: 2, explanation: "Rp 10.000,00 - Rp 5.000,00 = Rp 5.000,00." },
+            { id: 25, question: "Ada 2 sepeda yang dimana 1 sepeda memiliki 2 ban. Apabila kedua sepeda itu disatukan maka jumlah bannya ada …..", options: ["2 ban", "3 ban", "4 ban", "5 ban"], answer: 2, explanation: "2 ban + 2 ban = 4 ban." },
+            { id: 26, question: "Eko memiliki 10 buah pena lalu memberikan 2 buah pena kepada Asep. Jadi jumlah pena Asep sekarang ada…..", options: ["2 buah", "8 buah", "10 buah", "12 buah"], answer: 0, explanation: "Asep menerima 2 buah pena dari Eko, jadi jumlah pena Asep ada 2 buah." },
+            { id: 27, question: "Anto mempunyai 3 buah apel lalu dia membeli lagi 2 buah apel setelah itu memakan dia memakan 1 apel. Jadi sekarang berapakah jumlah apel Anto …..", options: ["3 buah", "4 buah", "5 buah", "6 buah"], answer: 1, explanation: "3 + 2 = 5 apel. Dimakan 1: 5 - 1 = 4 buah apel." },
+            { id: 28, question: "Ayah membelikan Ari 2 buah mangga tak lama datang lah ibu dengan membawakan Ari 3 mangga. Jadi berapakah jumlah buah mangga Ari sekarang …..", options: ["4 buah", "5 buah", "6 buah", "7 buah"], answer: 1, explanation: "2 mangga + 3 mangga = 5 buah mangga." },
+            { id: 29, question: "Eki hari ini menabung uang sebesar Rp 2.000,00 esoknya Eki menabung lagi sebesar Rp 5.000,00. Jadi jumlah uang Eki sekarang ada …..", options: ["Rp 6.000,00", "Rp 7.000,00", "Rp 8.000,00", "Rp 9.000,00"], answer: 1, explanation: "Rp 2.000,00 + Rp 5.000,00 = Rp 7.000,00." },
+            { id: 30, question: "Budi memiliki 10 kelereng lalu dia bermain bersama Bedul ternyata Budi memenangkan 5 kelereng. Jadi jumlah kelereng milik Budi sekarang ada ……", options: ["12 kelereng", "15 kelereng", "18 kelereng", "20 kelereng"], answer: 1, explanation: "10 kelereng + 5 kelereng = 15 kelereng." }
+        ];
+
+        // State Aplikasi
+        let currentStudent = { name: '', absen: '', kelas: '' };
+        let userAnswers = new Array(30).fill(null);
+        let currentIndex = 0;
+        let timerInterval = null;
+        let timeLeft = 30 * 60; // 30 Menit (1800 detik)
+        let isExamFinished = false;
+
+        // Data Peserta Lain (Simulasi Peringkat Kota Semarang SDN Genuksari 01)
+        let peerData = [
+            { name: "Anisa Rahma", kelas: "Kelas 1A", absen: "03", answers: generatePeerAnswers(29) },
+            { name: "Bagus Pratama", kelas: "Kelas 1A", absen: "05", answers: generatePeerAnswers(27) },
+            { name: "Citra Dewi", kelas: "Kelas 1A", absen: "08", answers: generatePeerAnswers(25) },
+            { name: "Dafa Putra", kelas: "Kelas 1A", absen: "12", answers: generatePeerAnswers(23) },
+            { name: "Eka Nur", kelas: "Kelas 1A", absen: "14", answers: generatePeerAnswers(20) }
+        ];
+
+        // Helper untuk simulasi kunci kawan
+        function generatePeerAnswers(scoreCount) {
+            let arr = [];
+            for(let i=0; i<30; i++) {
+                if(i < scoreCount) {
+                    arr.push(questionsData[i].answer);
+                } else {
+                    arr.push((questionsData[i].answer + 1) % 4); // Jawaban salah
+                }
+            }
+            return arr;
+        }
+
+        // --- 1. PROSES LOGIN & START ---
+        function handleLogin(e) {
+            e.preventDefault();
+            const name = document.getElementById('inputName').value.trim();
+            const absen = document.getElementById('inputAbsen').value.trim();
+            const kelas = document.getElementById('inputKelas').value;
+
+            if(!name || !absen) return;
+
+            currentStudent = { name, absen, kelas };
+
+            // Update UI Header
+            document.getElementById('hdrStudentName').textContent = name;
+            document.getElementById('hdrStudentAbsen').textContent = absen;
+            document.getElementById('hdrStudentClass').textContent = kelas;
+            document.getElementById('userHeaderInfo').classList.remove('hidden');
+
+            // Switch Screen
+            document.getElementById('loginSection').classList.add('hidden');
+            document.getElementById('examSection').classList.remove('hidden');
+
+            // Initialize Exam
+            currentIndex = 0;
+            renderQuestion(currentIndex);
+            renderNavigationGrid();
+            startTimer();
+        }
+
+        // --- 2. TIMER SYSTEM ---
+        function startTimer() {
+            updateTimerDisplay();
+            timerInterval = setInterval(() => {
+                timeLeft--;
+                updateTimerDisplay();
+
+                if (timeLeft <= 0) {
+                    clearInterval(timerInterval);
+                    autoFinishByTimer();
+                }
+            }, 1000);
+        }
+
+        function updateTimerDisplay() {
+            const minutes = Math.floor(timeLeft / 60);
+            const seconds = timeLeft % 60;
+            document.getElementById('timerDisplay').textContent = 
+                `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+        }
+
+        function autoFinishByTimer() {
+            document.getElementById('timeOutWarning').classList.remove('hidden');
+            finishExam();
+        }
+
+        // --- 3. RENDER SOAL & OPTIONS ---
+        function renderQuestion(index) {
+            currentIndex = index;
+            const q = questionsData[index];
+
+            document.getElementById('currentQuestionNum').textContent = index + 1;
+            document.getElementById('questionText').textContent = q.question;
+
+            // Render Options
+            const optionsContainer = document.getElementById('optionsContainer');
+            optionsContainer.innerHTML = '';
+
+            const optionLabels = ['A', 'B', 'C', 'D'];
+
+            q.options.forEach((optText, optIndex) => {
+                const isSelected = userAnswers[index] === optIndex;
+                
+                let btnClass = "w-full text-left p-4 rounded-xl border-2 transition flex items-center justify-between ";
+                if (isSelected) {
+                    btnClass += "border-blue-600 bg-blue-50 text-blue-900 font-semibold shadow-sm";
+                } else {
+                    btnClass += "border-slate-200 hover:border-slate-300 hover:bg-slate-50 text-slate-700";
+                }
+
+                const optButton = document.createElement('button');
+                optButton.className = btnClass;
+                optButton.onclick = () => selectOption(index, optIndex);
+
+                optButton.innerHTML = `
+                    <div class="flex items-center space-x-3">
+                        <span class="w-8 h-8 rounded-lg flex items-center justify-center font-bold text-sm ${isSelected ? 'bg-blue-600 text-white' : 'bg-slate-100 text-slate-600'}">
+                            ${optionLabels[optIndex]}
+                        </span>
+                        <span class="text-base">${optText}</span>
+                    </div>
+                    ${isSelected ? '<i class="fas fa-check-circle text-blue-600 text-xl"></i>' : ''}
+                `;
+
+                optionsContainer.appendChild(optButton);
+            });
+
+            // Handle Solution Box pasca ujian
+            const solutionBox = document.getElementById('solutionBox');
+            if(isExamFinished) {
+                solutionBox.classList.remove('hidden');
+                document.getElementById('solutionText').innerHTML = 
+                    `<strong>Jawaban Benar: ${optionLabels[q.answer]}. ${q.options[q.answer]}</strong><br><em>Cara:</em> ${q.explanation}`;
+            } else {
+                solutionBox.classList.add('hidden');
+            }
+
+            // Update Nav Buttons State
+            // Untuk nomor 1 cukup tombol selanjutnya saja
+            const btnPrev = document.getElementById('btnPrev');
+            const btnNext = document.getElementById('btnNext');
+            const btnFinish = document.getElementById('btnFinish');
+
+            if (index === 0) {
+                btnPrev.classList.add('hidden');
+            } else {
+                btnPrev.classList.remove('hidden');
+            }
+
+            // Di soal terakhir (nomor 30) ada tombol sebelumnya dan selesaikan
+            if (index === questionsData.length - 1) {
+                btnNext.classList.add('hidden');
+                btnFinish.classList.remove('hidden');
+            } else {
+                btnNext.classList.remove('hidden');
+                btnFinish.classList.add('hidden');
+            }
+
+            renderNavigationGrid();
+        }
+
+        function selectOption(qIndex, optIndex) {
+            if(isExamFinished) return; // Readonly mode pasca ujian
+            userAnswers[qIndex] = optIndex;
+            renderQuestion(qIndex);
+        }
+
+        function navigateQuestion(step) {
+            const newIndex = currentIndex + step;
+            if(newIndex >= 0 && newIndex < questionsData.length) {
+                renderQuestion(newIndex);
+            }
+        }
+
+        // --- 4. NAVIGATION GRID (3 BARIS SEJAJAR KOLEKSI KOTAK) ---
+        function renderNavigationGrid() {
+            const grid = document.getElementById('navigationGrid');
+            grid.innerHTML = '';
+
+            for (let i = 0; i < questionsData.length; i++) {
+                const isAnswered = userAnswers[i] !== null;
+                const isCurrent = i === currentIndex;
+
+                let btnStyle = "h-11 rounded-lg font-bold text-sm flex items-center justify-center transition border ";
+                
+                if (isCurrent) {
+                    btnStyle += "ring-2 ring-blue-600 ring-offset-1 bg-blue-100 text-blue-800 border-blue-400 ";
+                } else if (isAnswered) {
+                    btnStyle += "bg-emerald-500 text-white border-emerald-600 shadow-sm ";
+                } else {
+                    btnStyle += "bg-slate-100 hover:bg-slate-200 text-slate-700 border-slate-300 ";
+                }
+
+                const btn = document.createElement('button');
+                btn.className = btnStyle;
+                btn.textContent = i + 1;
+                btn.onclick = () => renderQuestion(i);
+
+                grid.appendChild(btn);
+            }
+        }
+
+        // --- 5. FINISH EXAM & EVALUATION ---
+        function confirmFinishExam() {
+            const unanswered = userAnswers.filter(a => a === null).length;
+            let msg = "Apakah Anda yakin ingin menyelesaikan ujian sekarang?";
+            if(unanswered > 0) {
+                msg = `Masih ada ${unanswered} soal yang belum dijawab. Yakin ingin menyelesaikan?`;
+            }
+
+            showModal("Selesaikan Ujian", msg, () => {
+                finishExam();
+            });
+        }
+
+        function finishExam() {
+            clearInterval(timerInterval);
+            isExamFinished = true;
+
+            // Hitung Skor
+            let correct = 0;
+            userAnswers.forEach((ans, idx) => {
+                if(ans === questionsData[idx].answer) {
+                    correct++;
+                }
+            });
+
+            const totalQuestions = questionsData.length;
+            const wrong = totalQuestions - correct;
+            const finalScore = Math.round((correct / totalQuestions) * 100);
+
+            // Hide Exam Section, Show Result Section
+            document.getElementById('examSection').classList.add('hidden');
+            document.getElementById('resultSection').classList.remove('hidden');
+
+            // Render Result Metrics
+            document.getElementById('scoreDisplay').textContent = finalScore;
+            document.getElementById('correctCountDisplay').textContent = correct;
+            document.getElementById('wrongCountDisplay').textContent = wrong;
+
+            // Compile All Rankings
+            const currentUserResult = {
+                name: currentStudent.name,
+                kelas: currentStudent.kelas,
+                absen: currentStudent.absen,
+                answers: userAnswers,
+                correct: correct,
+                wrong: wrong,
+                score: finalScore,
+                isUser: true
+            };
+
+            // Calculate score for peers
+            let allParticipants = peerData.map(p => {
+                let pCorrect = 0;
+                p.answers.forEach((ans, idx) => {
+                    if(ans === questionsData[idx].answer) pCorrect++;
+                });
+                return {
+                    name: p.name,
+                    kelas: p.kelas,
+                    absen: p.absen,
+                    answers: p.answers,
+                    correct: pCorrect,
+                    wrong: 30 - pCorrect,
+                    score: Math.round((pCorrect / 30) * 100),
+                    isUser: false
+                };
+            });
+
+            allParticipants.push(currentUserResult);
+
+            // Sort leaderboard by Score (descending)
+            allParticipants.sort((a, b) => b.score - a.score);
+
+            // Find user rank
+            const userRank = allParticipants.findIndex(p => p.isUser) + 1;
+            document.getElementById('rankDisplay').textContent = `#${userRank}`;
+
+            // Render Leaderboard & Matrix Tables
+            renderLeaderboard(allParticipants);
+            renderMatrixAnalysis(allParticipants);
+        }
+
+        // --- 6. RENDER REKAP PERINGKAT ---
+        function renderLeaderboard(participants) {
+            const tbody = document.getElementById('leaderboardTableBody');
+            tbody.innerHTML = '';
+
+            participants.forEach((p, idx) => {
+                const tr = document.createElement('tr');
+                if(p.isUser) {
+                    tr.className = "bg-yellow-50 font-semibold text-blue-900 border-2 border-yellow-300";
+                } else {
+                    tr.className = "hover:bg-slate-50";
+                }
+
+                tr.innerHTML = `
+                    <td class="p-3">
+                        <span class="inline-flex items-center justify-center w-7 h-7 rounded-full text-xs font-bold ${idx === 0 ? 'bg-yellow-400 text-yellow-900' : idx === 1 ? 'bg-slate-300 text-slate-800' : idx === 2 ? 'bg-amber-600 text-white' : 'bg-slate-100 text-slate-600'}">
+                            ${idx + 1}
+                        </span>
+                    </td>
+                    <td class="p-3 font-medium">${p.name} ${p.isUser ? '<span class="text-xs bg-blue-600 text-white px-2 py-0.5 rounded-full ml-1">Anda</span>' : ''}</td>
+                    <td class="p-3 text-slate-600">${p.kelas}</td>
+                    <td class="p-3 text-slate-600">${p.absen}</td>
+                    <td class="p-3 text-center text-emerald-600 font-bold">${p.correct}</td>
+                    <td class="p-3 text-center text-rose-600 font-bold">${p.wrong}</td>
+                    <td class="p-3 text-right font-extrabold text-blue-800">${p.score}</td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        // --- 7. RENDER MATRIKS ANALISIS SISWA (1 KOLOM 1 SOAL HASIL BENAR/SALAH) ---
+        function renderMatrixAnalysis(participants) {
+            const tbody = document.getElementById('matrixTableBody');
+            tbody.innerHTML = '';
+
+            participants.forEach(p => {
+                const tr = document.createElement('tr');
+                tr.className = p.isUser ? "bg-blue-50/50 font-medium" : "hover:bg-slate-50";
+
+                let rowHTML = `
+                    <td class="p-2 border border-slate-200 text-left font-semibold sticky left-0 bg-white z-10 whitespace-nowrap">
+                        ${p.name}
+                    </td>
+                    <td class="p-2 border border-slate-200 text-slate-600">${p.kelas}</td>
+                `;
+
+                // 30 Columns for 30 Questions
+                for(let i=0; i<30; i++) {
+                    const isCorrect = p.answers[i] === questionsData[i].answer;
+                    if(isCorrect) {
+                        rowHTML += `<td class="p-2 border border-slate-200 bg-emerald-500 text-white font-bold" title="Soal ${i+1}: Benar">✓</td>`;
+                    } else {
+                        rowHTML += `<td class="p-2 border border-slate-200 bg-rose-500 text-white font-bold" title="Soal ${i+1}: Salah">✕</td>`;
+                    }
+                }
+
+                rowHTML += `<td class="p-2 border border-slate-200 font-bold text-blue-800">${p.score}</td>`;
+                tr.innerHTML = rowHTML;
+                tbody.appendChild(tr);
+            });
+        }
+
+        // --- 8. REVIEW JAWABAN (KEMBALI KE SOAL SETELAH SELESAI) ---
+        function reviewAnswers() {
+            document.getElementById('resultSection').classList.add('hidden');
+            document.getElementById('examSection').classList.remove('hidden');
+            currentIndex = 0;
+            renderQuestion(currentIndex);
+        }
+
+        // --- 9. LOGOUT / KELUAR ---
+        function logoutApp() {
+            location.reload();
+        }
+
+        // --- 10. MODAL UTILITY ---
+        function showModal(title, message, onConfirm) {
+            document.getElementById('modalTitle').textContent = title;
+            document.getElementById('modalMessage').textContent = message;
+            
+            const modal = document.getElementById('customModal');
+            const confirmBtn = document.getElementById('modalConfirmBtn');
+
+            confirmBtn.onclick = () => {
+                closeModal();
+                if(onConfirm) onConfirm();
+            };
+
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+        }
+
+        function closeModal() {
+            const modal = document.getElementById('customModal');
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+        }
+    </script>
+</body>
+</html>
+```
